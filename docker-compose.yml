@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+  web:
+    build:
+      context: ./docker/web
+      args:
+        - TZ=${TZ}
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./src:/var/www/html/
+      - ./logs/php:/var/log/php
+      - ./docker/web/php.ini:/usr/local/etc/php/php.ini
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/html/public
+      - SSL_CERT_FILE=/etc/apache2/server.crt
+      - SSL_PRIVATE_FILE=/etc/apache2/server.key
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_DATABASE=${DB_NAME}
+      - DB_USERNAME=${DB_USER}
+      - DB_PASSWORD=${DB_PASS}
+      - TZ=${TZ}
+
+  db:
+    build:
+      context: ./docker/db
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql-store:/var/lib/mysql
+      - ./logs/mysql:/var/log/mysql
+    environment:
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASS}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASS}
+      - TZ=${TZ}
+
+volumes:
+  mysql-store:
