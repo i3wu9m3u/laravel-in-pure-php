@@ -1,0 +1,10 @@
+{
+    "config": {
+        "platform": {
+            "php": "7.3.29"
+        }
+    },
+    "require": {
+        "illuminate/validation": "^8.55"
+    }
+}
